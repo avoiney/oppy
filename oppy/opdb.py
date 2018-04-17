@@ -1,8 +1,8 @@
 #! /usr/bin/python3
 import ply.yacc as yacc
 
-from opparser import (OpTqlParser, OpFilter, OpFuzzy,
-                      OpUnionOperator, OpIntersectionOperator)
+from oppy.opparser import (OpTqlParser, OpFilter, OpFuzzy,
+                           OpUnionOperator, OpIntersectionOperator)
 
 
 class OpResponse(object):

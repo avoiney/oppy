@@ -2,7 +2,7 @@
 import ply.yacc as yacc
 import re
 
-from oplex import OpTqlLexer
+from oppy.oplex import OpTqlLexer
 
 
 class ParsingError(Exception):
