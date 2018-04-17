@@ -15,10 +15,19 @@ An interactive shell around OnePassword CLI written in python3
 # How to install
 `python setup.py install`
 
+If you are in a virtualenv, without system-package access granted,
+and because of a mysterious bug (any help welcomed), you have to run also  
+`pip install --force -U dbus-python`
+
+This will certainly output an error, but check all goes right runnning 
+`python -c "import secretstorage"`.
+
+If this last command run without any errors, you are good to go!
+
 # How to use is
 ```shell    
-$ op.py --help
-usage: op.py [-h] [--config CONFIG] [--debug] [--vault VAULT] profile
+$ oppy --help
+usage: oppy [-h] [--config CONFIG] [--debug] [--vault VAULT] profile
 
 1password CLI
 
@@ -49,11 +58,11 @@ vault=null
 
 On the command line, specify one of the profile you defined in the configuration file.
 
-    $ op.py profile1 
+    $ oppy profile1 
 
 You can also override options
 
-    $ op.py profile2 --debug --vault=Shared
+    $ oppy profile2 --debug --vault=Shared
 
 
 ## TODO
