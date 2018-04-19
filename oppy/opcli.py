@@ -264,7 +264,7 @@ class OnePasswordCLI(cmd.Cmd):
     def print_json(self, data):
         """ Format the json before outputing it. """
         if data:
-            data = json.dumps(data, indent=4)
+            data = json.dumps(data, indent=4, ensure_ascii=False)
             print(pygments.highlight(data, pyg_lexer.JsonLexer(),
                                      pyg_format.Terminal256Formatter()))
 
