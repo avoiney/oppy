@@ -4,7 +4,7 @@ import configparser
 import logging
 import os
 
-import opcli
+import oppy.opcli as opcli
 
 parser = argparse.ArgumentParser(description='1password CLI')
 parser.add_argument('profile', type=str,
