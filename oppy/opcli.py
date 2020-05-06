@@ -77,25 +77,15 @@ class OnePasswordCLI(cmd.Cmd):
         })
         return environ
 
-    def _get_pass_from_keyring(self):
-        """ Retrieve the OnePassword master key from the system
-        keyring.
-        """
-        return keyring.get_password('OnePasswordCLI',
-                                    'OP_{}'.format(self.domain))
-
     def _set_pass_to_keyring(self, password=None):
         """ Set the OnePassword master key in the system keyring."""
-        password = password or self._get_pass_from_keyring()
-        if password is None:
-            password = getpass.getpass(
-                '1password master for {}:'.format(self.domain))
-        keyring.set_password(
-            'OnePasswordCLI', 'OP_{}'.format(self.domain), password)
+        password = getpass.getpass(
+            '1password master for {}:'.format(self.domain))
+        return password
 
     def _get_encryption_key(self, size=32):
         """ Compute the encryption key from OnePassword master key. """
-        password = bytes(self._get_pass_from_keyring(), 'utf-8')
+        password = bytes(self.op_session, 'utf-8')
         # b'\xce' char make 1 character len
         password = password[:size] + b'\xce' * (size - len(password))
         return base64.encodebytes(password)
@@ -111,10 +101,10 @@ class OnePasswordCLI(cmd.Cmd):
                                    stderr=subprocess.PIPE)
 
         # set the password to the keyring
-        self._set_pass_to_keyring()
+        password = self._set_pass_to_keyring()
 
         # extract the stdout and stderr from process
-        out, err = process.communicate(self._get_pass_from_keyring())
+        out, err = process.communicate(password)
 
         # if error, log it and retry
         if err:
