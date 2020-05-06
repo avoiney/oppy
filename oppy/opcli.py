@@ -137,7 +137,7 @@ class OnePasswordCLI(cmd.Cmd):
                 # decrypt data
                 f = fernet.Fernet(self._get_encryption_key())
                 self.items = pickle.loads(f.decrypt(tmp.read()))
-        except (ValueError, TypeError, IOError, EOFError) as exc:
+        except (fernet.InvalidToken, ValueError, TypeError, IOError, EOFError) as exc:
             logger.debug(exc)
             try:
                 os.remove(self.tmp_file_name)
