@@ -24,7 +24,11 @@ setup(
     packages=find_packages(),
     install_requires=['cryptography', 'dbus-python', 'ply',
                       'keyring', 'Pygments', 'SecretStorage'],
-    scripts=['bin/oppy'],
+    entry_points={
+        'console_scripts': [
+            'oppy=oppy:main',
+        ],
+    },
     project_urls={
         'Bug Reports': 'https://github.com/avoiney/oppy/issues',
         'Source': 'https://github.com/avoiney/oppy'
