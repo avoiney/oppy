@@ -206,9 +206,40 @@ class OnePasswordCLI(cmd.Cmd):
                                if field.get('designation') == 'password']
             if password_fields:
                 item['password'] = password_fields[0]['value']
+            # look for totp
+            for section in raw_item.get('details', {}).get('sections', []):
+                for field in section.get('fields', []):
+                    if field['t'] == 'one-time password':
+                        totp = self._get_item_totp(uuid)
+                        if totp is not None:
+                            item['totp'] = totp
+                        break
             return item
         if err:
             logger.error(err)
+
+    def _get_item_totp(self, uuid):
+        """ Get the TOTP on an item from its UUID.
+
+        :type uuid: str
+        :param uuid: the item unique itentifier
+        :returns: dict -- the dict of the item
+        """
+        cmd = ['op', 'get', 'totp']
+        if self.vault:
+            cmd += ['--vault=%s' % self.vault]
+        cmd += [uuid]
+        process = subprocess.Popen(args=cmd,
+                                   env=self._get_env(),
+                                   encoding='utf-8',
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        out, err = process.communicate()
+        if out:
+            return out.strip()
+        if err:
+            logger.error(err)
+
 
     def _ask_choice(self, choices):
         """ Ask user to select one of the elements of the list.
@@ -310,15 +341,24 @@ class OnePasswordCLI(cmd.Cmd):
                                   item['overview'].get('url', '-'))
                 for item in items
             ]
-            # ask user
-            user_choice = self._ask_choice(choices)
-            # if choice is None, user want to exit
-            if user_choice is None:
-                return
-            # use the choice to get item from list
-            item = items[user_choice]
+            user_choice = None
+            while user_choice is None:
+                # ask user
+                user_choice = self._ask_choice(choices)
+                # if choice is None, user want to exit
+                if user_choice is None:
+                    return
+                try:
+                    # use the choice to get item from list
+                    item = items[user_choice]
+                except IndexError:
+                    user_choice = None
         # output the item
         self.print_json(self._get_item(item['uuid']))
+
+    def do_totp(self, arg):
+        """ Get the TOTP for a specitif item """
+        print(self._get_item_totp(arg))
 
     def do_setvault(self, args):
         """ Change the current vault. """
