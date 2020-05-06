@@ -17,6 +17,7 @@ import pygments.formatters as pyg_format
 import pygments.lexers as pyg_lexer
 
 import oppy.opdb as opdb
+import oppy.opparser as opparser
 
 
 logger = logging.getLogger(__name__)
