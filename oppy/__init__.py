@@ -20,8 +20,8 @@ argv = parser.parse_args()
 
 # read config
 config = configparser.ConfigParser({
-    'debug': False,
-    'vault': None,
+    'debug': 'no',
+    'vault': '',
     'temp_file': os.path.expanduser('~/.config/op.py/tmpfile')
 })
 config.read(os.path.expanduser(argv.config))
