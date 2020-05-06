@@ -78,10 +78,10 @@ class OnePasswordCLI(cmd.Cmd):
         })
         return environ
 
-    def _set_pass_to_keyring(self, password=None):
-        """ Set the OnePassword master key in the system keyring."""
+    def _ask_for_master_password(self, password=None):
+        """ Ask for the OnePassword master key."""
         password = getpass.getpass(
-            '1password master for {}:'.format(self.domain))
+            '\n1password master for {}:'.format(self.domain))
         return password
 
     def _get_encryption_key(self, size=32):
@@ -102,7 +102,7 @@ class OnePasswordCLI(cmd.Cmd):
                                    stderr=subprocess.PIPE)
 
         # set the password to the keyring
-        password = self._set_pass_to_keyring()
+        password = self._ask_for_master_password()
 
         # extract the stdout and stderr from process
         out, err = process.communicate(password)
